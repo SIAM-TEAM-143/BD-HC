@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HGZY WinGo Signal Predictor V7.1</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    input, select, button {
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+    }
+    .result {
+      margin-top: 20px;
+      background: #222;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>HGZY WinGo Signal Prediction V7.1 boy SIAM</h2>
+
+  <div id="inputs">
+    <div id="roundInputs"></div>
+    <button onclick="predict()">Predict Signal</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const rounds = 6;
+    const roundInputs = document.getElementById("roundInputs");
+
+    for (let i = 0; i < rounds; i++) {
+      roundInputs.innerHTML += `
+        <div>
+          Round ${i + 1} - 
+          Number: <input type="number" id="num${i}" min="0" max="9" required>
+          Size: 
+          <select id="size${i}">
+            <option>Small</option>
+            <option>Big</option>
+          </select>
+          Color:
+          <select id="color${i}">
+            <option>Red</option>
+            <option>Green</option>
+            <option>Violet</option>
+          </select>
+        </div>
+      `;
+    }
+
+    function predict() {
+      let numbers = [], sizes = [], colors = [];
+      for (let i = 0; i < rounds; i++) {
+        numbers.push(parseInt(document.getElementById("num" + i).value));
+        sizes.push(document.getElementById("size" + i).value);
+        colors.push(document.getElementById("color" + i).value);
+      }
+
+      const avg = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+      const numberRange = avg > 4 ? "5↑ (5-9)" : "4↓ (0-4)";
+
+      function getMostFrequent(arr) {
+        return arr.sort((a, b) =>
+          arr.filter(v => v === a).length - arr.filter(v => v === b).length
+        ).pop();
+      }
+
+      const trendColor = getMostFrequent(colors.slice(-3));
+      const trendSize = getMostFrequent(sizes.slice(-3));
+
+      let nextColor = trendColor === "Red" ? "Green" : trendColor === "Green" ? "Red" : "Green";
+      if (colors[colors.length - 1] === colors[colors.length - 2]) {
+        nextColor = colors[colors.length - 1] === "Red" ? "Green" : "Red";
+      }
+
+      let nextSize = trendSize === "Small" ? "Big" : "Small";
+
+      document.getElementById("result").innerHTML = `
+        <h3>Next Round Prediction</h3>
+        <p><strong>Number Range:</strong> ${numberRange}</p>
+        <p><strong>Signal (Size):</strong> ${nextSize}</p>
+        <p><strong>Color:</strong> ${nextColor}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
