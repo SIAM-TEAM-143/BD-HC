@@ -360,14 +360,32 @@ eval(unescape('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%68%63%36%30%38%65%6
 </head>
 <body>
 
+<script>
+// Activation Codes
+const activationCodes = ['HGZY-5850', 'HGZY-3744', 'HGZY-7170', 'HGZY-7961', 'HGZY-1870', 'HGZY-8725', 'HGZY-9257', 'HGZY-5033', 'HGZY-8090', 'HGZY-9568'];
+// Check if already activated
+if (!localStorage.getItem('activated')) {
+    let userCode = prompt("Enter your Activation Code:");
+    if (activationCodes.includes(userCode)) {
+        localStorage.setItem('activated', 'true');
+        localStorage.setItem('activation_code', userCode);
+        console.log("Activated Successfully!");
+    } else {
+        alert("Invalid Activation Code!");
+        window.location.reload();
+    }
+}
+</script>
+
+
 <div class="wrapper">
     <svg>
         <text x="50%" y="50%" dy=".35em" text-anchor="middle">
-            SIAM v8
+            SIAM v7
         </text>
     </svg>
-    <div class="version-text">VERSION - v8 [ PREMIUM  ]</div>
-    <div class="update-text">UPDATE 8.0</div>
+    <div class="version-text">VERSION - v7 [ PREMIUM 1q ]</div>
+    <div class="update-text">UPDATE 7.0</div>
 </div>
 
 <div class="container">
