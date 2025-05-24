@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIAM Game Dashboard</title>
+  <script src="js/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    h2 {
+      color: #00bcd4;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 95%;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      background-color: #00bcd4;
+      color: #000;
+    }
+    tr:nth-child(even) td {
+      background-color: #2c2c2c;
+    }
+    tr:hover td {
+      background-color: #3a3a3a;
+    }
+    #timeRemaining {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      margin: 10px 0;
+    }
+    #predictedNumber, #predictedPremium {
+      font-size: 18px;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .button-group {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button-group a {
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    #registerButton { background-color: #00bcd4; }
+    #registerButton:hover { background-color: #0097a7; transform: scale(1.05); }
+    @media (max-width: 768px) {
+      th, td { font-size: 14px; padding: 8px; }
+      #timeRemaining { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>HACK MAKE BOY SIAM 99% WORKING️</h2>
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Last Period</th>
+          <th>Number</th>
+          <th>Colour</th>
+          <th>Premium</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>  <div class="card">
+    <h2>VIP HACK BY SIAM</h2>
+    <div id="timeRemaining"></div>
+    <div id="predictedNumber"></div>
+    <div id="predictedPremium">↗️ Live Signal ↖️</div>
+    <div class="button-group">
+      <a href="#" id="registerButton" target="_blank">💸💸💸💸💥🎀</a>
+    </div>
+  </div>  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tableBody = document.querySelector('#dataTable tbody');
+      const predictedNumberElement = document.getElementById('predictedNumber');
+      const predictedPremiumElement = document.getElementById('predictedPremium');
+      
+
+      let lastPrediction = JSON.parse(localStorage.getItem('lastPrediction'));
+      let currentPrediction = JSON.parse(localStorage.getItem('currentPrediction'));
+      let timerInterval;
+
+      const fetchNoAverageEmerdList = () => {
+        return fetch('https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pageSize: 10,
+            pageNo: 1,
+            typeId: 1,
+            language: 0,
+            random: "ded40537a2ce416e96c00e5218f6859a",
+            signature: "69306982EEEB19FA940D72EC93C62552",
+            timestamp: Math.floor(Date.now() / 1000)
+          })
+        }).then(res => res.json());
+      };
+
+      const fetchGameIssue = () => {
+        return fetch('https://api.bdg88zf.com/api/webapi/GetGameIssue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            typeId: 1,
+            language: 0,
+            random: "f8dcb5c527814db68800e3946a2b60e8",
+            signature: "08CF7FF3339ED58D4743F4B650FCBEA9",
+            timestamp: Math.floor(Date.now() / 1000)
+          })
+        }).then(res => res.json());
+      };
+
+      const categorizeNumber = (num) => {
+        return num <= 4 ? 'Small' : 'Big';
+      };
+
+      const generateRandomPrediction = () => {
+        const number = Math.floor(Math.random() * 10);
+        return { number, category: categorizeNumber(number) };
+      };
+
+      const updateDataAndPrediction = () => {
+        fetchNoAverageEmerdList().then(data => {
+          const list = data.data.list;
+          tableBody.innerHTML = '';
+          list.forEach(item => {
+            const row = `<tr>
+              <td>${item.issueNumber}</td>
+              <td>${item.number} (${categorizeNumber(item.number)})</td>
+              <td>${item.colour}</td>
+              <td>${item.premium}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+          });
+
+          const latestIssue = list[0].issueNumber;
+          const latestNumber = Number(list[0].number);
+
+          if (!lastPrediction || lastPrediction.issueNumber !== latestIssue) {
+            currentPrediction = generateRandomPrediction();
+            currentPrediction.issueNumber = latestIssue;
+            localStorage.setItem('currentPrediction', JSON.stringify(currentPrediction));
+            lastPrediction = currentPrediction;
+            localStorage.setItem('lastPrediction', JSON.stringify(lastPrediction));
+          }
+
+          predictedNumberElement.textContent = `Prediction: ${currentPrediction.number} (${currentPrediction.category})`;
+        });
+      };
+
+      const updateTimer = () => {
+        fetchGameIssue().then(data => {
+          const endTime = new Date(data.data.endTime);
+          const now = new Date();
+          const diff = endTime - now;
+
+          if (diff <= 0) {
+            timerElement.textContent = "Time Remaining: 00:00:00";
+            clearInterval(timerInterval);
+            updateDataAndPrediction();
+            updateTimer();
+          } else {
+            const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+            const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            timerElement.textContent = `Time Remaining: ${h}:${m}:${s}`;
+          }
+        });
+      };
+
+      updateDataAndPrediction();
+      updateTimer();
+      timerInterval = setInterval(() => {
+        updateTimer();
+        updateDataAndPrediction();
+      }, 1000);
+    });
+  </script></body>
+</html>
